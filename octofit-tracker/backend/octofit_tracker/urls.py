@@ -14,10 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+
 from django.contrib import admin
 from django.urls import path, include
 from django.http import JsonResponse
 import os
+from rest_framework import routers
+from .views import UserViewSet
+
 
 
 def api_root(request):
@@ -31,8 +35,12 @@ def api_root(request):
         "workouts": f"{base_url}/api/workouts/",
     })
 
+router = routers.DefaultRouter()
+router.register(r'users', UserViewSet)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', api_root, name='api_root'),
+    path('api/users/', include(router.urls)),
     path('', api_root, name='api_root_root'),
 ]
